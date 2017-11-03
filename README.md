@@ -1,6 +1,6 @@
 # Dog Cute
 ## Description
-Tinder for dogs! Basically just swipe right, and swipe left if you don't think the dog is cute.
+Tinder for dogs! Basically just swipe right, and swipe left if you don't think the dog is cute. This app uses [https://dog.ceo/dog-api/]() to populate itself with images.
 
 ## Installation
 - Clone the repository: `git clone https://github.com/noahmalmed/DogCute.git`
