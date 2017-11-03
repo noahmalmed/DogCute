@@ -5,6 +5,7 @@ import {
   View,
   Animated,
   Text,
+  StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,6 +13,11 @@ import SwipeCards from 'react-native-swipe-cards';
 
 import type { CardModel } from '../typeDefinitions';
 import Card from './Card';
+import {
+    backgroundBlue,
+    cuteGreen,
+    notCuteRed,
+} from '../styles/colors'
 import type { AppState } from '../reducers';
 import * as swiperActions from '../actions.js';
 
@@ -41,11 +47,31 @@ type State = {
     feedbackViewOpacity: Animated.Value
 }
 
-const renderCard = (cardUrl: string) => <Card cardData={cardUrl} />;
+const styles = StyleSheet.create({
+    containerStyle: {
+        flex: 1,
+        backgroundColor: backgroundBlue
+    },
+    feedbackViewContainerStyle: {
+        position: 'absolute',
+        bottom: 0, 
+        left: 0, 
+        right: 0, 
+        top: 0
+    },
+    feedbackViewStyle: { 
+        flex: 1,
+        justifyContent: 'center'
+    },
+    textStyle: {
+        fontSize: 50,
+        marginVertical: 15,
+        textAlign: 'center',
+    }
+});
 
 class MainScreen extends Component<Props, State> {
     cardSwiper: SwipeCards;
-    animatedTextView: AnimatedTextView;
 
     constructor(props: Props) {
         super(props);
@@ -81,32 +107,31 @@ class MainScreen extends Component<Props, State> {
     }
     
     render() {
-        const backgroundColor = this.state.isCardSuccess ? '#3ee07f' : '#e26376'
-        const text = this.state.isCardSuccess ? 'Cute!' : 'Not Cute'
+        const text = this.state.isCardSuccess ? 'Cute!' : 'Not Cute';
+        const backgroundColor = this.state.isCardSuccess ?  cuteGreen : notCuteRed;
+        const animatedStyle = {opacity: this.state.feedbackViewOpacity, backgroundColor};
         return (
-        <View style={{flex: 1, backgroundColor: '#99dbff'}}>
-            <View style={{flex: 1}}>
-                <SwipeCards
-                    style = {{flex: 1, alignSelf: 'center'}}
-                    cards={this.props.cardData}
-                    renderCard={renderCard}
-                    stack
-                    backgroundColor="white"
-                    stackOffsetX={0}
-                    handleYup={this.cardWasSwipedRight.bind(this)}
-                    handleNope={this.cardWasSwipedLeft.bind(this)}
-                    showYup={false}
-                    showNope={false}
-                    cardRemoved={this.cardRemoved.bind(this)}
-                    ref={(ref) => this.cardSwiper = ref}
-                >
-                </SwipeCards>
-            </View>
-            <View style={{position: 'absolute', bottom: 0, left: 0, right: 0, top: 0 }} pointerEvents="none">
-                <Animated.View style={{ flex: 1, backgroundColor, opacity: this.state.feedbackViewOpacity, justifyContent: 'center'}}>
-                    <Text
-                        style={{fontSize: 50, marginVertical: 15, textAlign: 'center'}}
-                    > {text} </Text>
+        <View style={styles.containerStyle}>
+            <SwipeCards
+                cards={this.props.cardData}
+                renderCard={(cardUrl: string) => <Card cardData={cardUrl} />}
+                stack
+                backgroundColor="white"
+                stackOffsetX={0}
+                renderNoMoreCards={() => <Text> Loading More Cards </Text>}
+                handleYup={this.cardWasSwipedRight.bind(this)}
+                handleNope={this.cardWasSwipedLeft.bind(this)}
+                showYup={false}
+                showNope={false}
+                cardRemoved={this.cardRemoved.bind(this)}
+                ref={(ref) => this.cardSwiper = ref}
+                onClickHandler={() => {}}
+            />
+            <View style={styles.feedbackViewContainerStyle} pointerEvents="none">
+                <Animated.View style={[styles.feedbackViewStyle, animatedStyle]}>
+                    <Text style={styles.textStyle}> 
+                        {text} 
+                    </Text>
                 </Animated.View>
             </View>
         </View>
