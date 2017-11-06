@@ -1,7 +1,5 @@
 // @flow
 import type { 
-    CardModel,
-    Action,
     AddCardAction,
     PlainAction,
     SwipeAction,
