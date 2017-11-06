@@ -5,7 +5,8 @@ import {
   View,
   Animated,
   Text,
-  StyleSheet
+  StyleSheet,
+  Button,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -81,6 +82,21 @@ class MainScreen extends Component<Props, State> {
         }
     }
 
+    static navigationOptions = ({ navigation }) => {
+        const RightButton =  () => (
+            <Button 
+                title="favorites"
+                onPress={() => {
+                    navigation.navigate('Favorites')
+                }}
+            />
+        );
+        return ({
+            headerTitle: 'Are These Dogs Cute?',
+            headerRight: <RightButton />,
+        });
+      };
+
     componentDidMount() {
         // Preload some images
         for(let i = 0; i < MAX_PRELOADED_CARD; i++) {
@@ -89,18 +105,19 @@ class MainScreen extends Component<Props, State> {
     }
 
     cardRemoved() {
-        this.props.swiperActions.cardSwiped()
         this.props.swiperActions.requestRandomDogData()
     }
 
-    cardWasSwipedRight() {
+    cardWasSwipedRight(card: CardModel) {
+        this.props.swiperActions.cardSwiped(true, card.imageUrl)
         this.setState({
             isCardSuccess: true,
         }, this.animateTextPop());
         
     }
 
-    cardWasSwipedLeft() {
+    cardWasSwipedLeft(card: CardModel) {
+        this.props.swiperActions.cardSwiped(false, card.imageUrl)
         this.setState({
             isCardSuccess: false,
         }, this.animateTextPop());
