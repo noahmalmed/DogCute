@@ -29,9 +29,11 @@ export function requestRandomDogData() {
     }
 }
 
-export function cardSwiped(): PlainAction {
+export function cardSwiped(wasLiked: boolean, url: string): PlainAction {
     return {
         type: CARD_SWIPED,
+        wasLiked,
+        url,
     }
 }
 

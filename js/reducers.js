@@ -3,6 +3,8 @@ import type {
     CardModel,
     Action,
     AddCardAction,
+    PlainAction,
+    SwipeAction,
 } from './typeDefinitions';
 import {
     ADD_CARD,
@@ -22,9 +24,14 @@ type SwiperState = {
     cardUrls: Array<string>,
 }
 
+type FavoritesState = {
+    favoritesUrls: Array<string>
+}
+
 export type AppState = {
     network: NetworkState,
-    swiper: SwiperState
+    swiper: SwiperState,
+    favorites: FavoritesState,
 }
 
 const initialNetworkState: NetworkState = {
@@ -34,6 +41,10 @@ const initialNetworkState: NetworkState = {
 const initialSwiperState: SwiperState = {
     cardsRemoved: 0,
     cardUrls: [],
+}
+
+const initialFavoritesState: FavoritesState = {
+    favoritesUrls: [],
 }
 
 function swiperReducer(state: SwiperState = initialSwiperState, action: AddCardAction) {
@@ -54,7 +65,7 @@ function swiperReducer(state: SwiperState = initialSwiperState, action: AddCardA
     }
 }
 
-function networkReducer(state: NetworkState = initialNetworkState, action: Action) {
+function networkReducer(state: NetworkState = initialNetworkState, action: PlainAction) {
     switch(action.type) {
         case DOG_DATA_WAS_REQUESTED:
             return {
@@ -72,9 +83,25 @@ function networkReducer(state: NetworkState = initialNetworkState, action: Actio
     }
 }
 
+function favoritesReducer(state: FavoritesState = initialFavoritesState, action: SwipeAction) {
+    switch (action.type) {
+        case CARD_SWIPED: 
+            return action.wasLiked ? 
+                {
+                    ...state,
+                    favoritesUrls: [...state.favoritesUrls, action.url]
+                }
+            :
+                state;
+        default:
+            return state;
+    }
+}
+
 const appState: AppState = combineReducers({
     network: networkReducer,
     swiper: swiperReducer,
+    favorites: favoritesReducer,
 })
 
 export default appState;

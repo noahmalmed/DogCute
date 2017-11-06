@@ -19,6 +19,13 @@ export type PlainAction = {
     type: string,
 }
 
+export type SwipeAction = {
+    type: String,
+    wasLiked: boolean,
+    url: string, 
+}
+
 export type Action = 
     | AddCardAction
-    | PlainAction;
+    | PlainAction
+    | SwipeAction;
