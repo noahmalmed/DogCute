@@ -8,5 +8,5 @@ Tinder for dogs! Basically just swipe right, and swipe left if you don't think t
 - install dependencies: `npm install`
 
 ## Run
-- For Android, start and emulator and run `react-native run-android`
+- For Android, start an emulator and run `react-native run-android`
 - For iOS, run `react-native run-ios` 
